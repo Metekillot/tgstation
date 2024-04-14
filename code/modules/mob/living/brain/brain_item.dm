@@ -41,6 +41,10 @@
 	/// Size modifier for the sprite
 	var/brain_size = 1
 
+
+	var/dormant_controller
+
+
 /obj/item/organ/internal/brain/Initialize(mapload)
 	. = ..()
 	// Brain size logic
@@ -108,6 +112,13 @@
 	//Update the body's icon so it doesnt appear debrained anymore
 	brain_owner.update_body_parts()
 
+/obj/item/organ/internal/brain/on_mob_insert(mob/living/carbon/brain_owner, special = FALSE, movement_flags)
+	. = ..()
+	if(dormant_controller)
+		var/datum/ai_controller/waking_controller = dormant_controller
+		waking_controller.PossessPawn(brain_owner)
+
+
 /obj/item/organ/internal/brain/mob_remove(mob/living/carbon/organ_owner, special, movement_flags)
 	// Delete skillchips first as parent proc sets owner to null, and skillchips need to know the brain's owner.
 	if(!QDELETED(organ_owner) && length(skillchips))
@@ -130,6 +141,12 @@
 	if(!special)
 		organ_owner.update_body_parts()
 		organ_owner.clear_mood_event("brain_damage")
+
+/obj/item/organ/internal/brain/on_mob_remove(mob/living/carbon/organ_owner, special)
+	. = ..()
+	if (organ_owner.ai_controller)
+		dormant_controller = organ_owner.ai_controller
+		organ_owner.ai_controller.UnpossessPawn()
 
 /obj/item/organ/internal/brain/proc/transfer_identity(mob/living/L)
 	name = "[L.name]'s [initial(name)]"

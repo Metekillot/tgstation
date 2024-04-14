@@ -166,13 +166,13 @@
 		to_chat(monkey_brain.owner, span_notice("You will now stumble while while colliding with people who are in combat mode."))
 	build_all_button_icons()
 
-/obj/item/organ/internal/brain/primate/on_mob_insert(mob/living/carbon/primate)
+/obj/item/organ/internal/brain/primate/on_mob_insert(mob/living/carbon/organ_owner)
 	. = ..()
-	RegisterSignal(primate, COMSIG_MOVABLE_CROSS, PROC_REF(on_crossed))
+	RegisterSignal(organ_owner, COMSIG_MOVABLE_CROSS, PROC_REF(on_crossed))
 
-/obj/item/organ/internal/brain/primate/on_mob_remove(mob/living/carbon/primate)
+/obj/item/organ/internal/brain/primate/on_mob_remove(mob/living/carbon/organ_owner)
 	. = ..()
-	UnregisterSignal(primate, COMSIG_MOVABLE_CROSS)
+	UnregisterSignal(organ_owner, COMSIG_MOVABLE_CROSS)
 
 /obj/item/organ/internal/brain/primate/proc/on_crossed(datum/source, atom/movable/crossed)
 	SIGNAL_HANDLER

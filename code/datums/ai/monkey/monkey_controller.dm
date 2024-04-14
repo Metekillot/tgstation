@@ -72,8 +72,6 @@ have ways of interacting with a specific mob and control it.
 	set_trip_mode(mode = FALSE)
 
 /datum/ai_controller/monkey/TryPossessPawn(atom/new_pawn)
-	if(!isliving(new_pawn))
-		return AI_CONTROLLER_INCOMPATIBLE
 
 	var/mob/living/living_pawn = new_pawn
 	if(!HAS_TRAIT(living_pawn, TRAIT_RELAYING_ATTACKER))
