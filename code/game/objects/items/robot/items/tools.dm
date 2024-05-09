@@ -212,6 +212,9 @@
 
 	if(isnull(new_tool_behaviour) || new_tool_behaviour == tool_behaviour)
 		return
+	change_tool(new_tool_behaviour)
+
+/obj/item/borg/cyborg_omnitool/change_tool(new_tool_behaviour)
 	if(new_tool_behaviour == NO_TOOL)
 		tool_behaviour = null
 	else
