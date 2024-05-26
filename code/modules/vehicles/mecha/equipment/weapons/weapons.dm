@@ -595,6 +595,7 @@
 		to_chat(source, "[icon2html(src, source)][span_notice("[mobtarget] successfully loaded.")]")
 		to_chat(mobtarget, "[span_warning("You have been moved into [secmech.cargo_hold]. You can attempt to resist out if you wish.")]")
 		if(autocuff && iscarbon(target))
+			// leaving this note for a fix to this bug
 			var/mob/living/carbon/carbontarget = target
 			carbontarget.set_handcuffed(new cuff_type(carbontarget))
 			carbontarget.update_handcuffed()
