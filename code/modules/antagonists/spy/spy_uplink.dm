@@ -23,14 +23,14 @@
 /datum/component/spy_uplink/RegisterWithParent()
 	RegisterSignal(parent, COMSIG_ATOM_EXAMINE, PROC_REF(on_examine))
 	RegisterSignal(parent, COMSIG_ITEM_ATTACK_SELF, PROC_REF(on_attack_self))
-	RegisterSignal(parent, COMSIG_ITEM_PRE_ATTACK_SECONDARY, PROC_REF(on_pre_attack_secondary))
+	RegisterSignal(parent, COMSIG_ITEM_INTERACTING_WITH_ATOM_SECONDARY, PROC_REF(on_secondary_interact))
 	RegisterSignal(parent, COMSIG_TABLET_CHECK_DETONATE, PROC_REF(block_pda_bombs))
 
 /datum/component/spy_uplink/UnregisterFromParent()
 	UnregisterSignal(parent, list(
 		COMSIG_ATOM_EXAMINE,
 		COMSIG_ITEM_ATTACK_SELF,
-		COMSIG_ITEM_PRE_ATTACK_SECONDARY,
+		COMSIG_ITEM_INTERACTING_WITH_ATOM_SECONDARY,
 		COMSIG_TABLET_CHECK_DETONATE,
 	))
 
@@ -60,16 +60,16 @@
 		INVOKE_ASYNC(src, TYPE_PROC_REF(/datum, ui_interact), user)
 	return NONE
 
-/datum/component/spy_uplink/proc/on_pre_attack_secondary(obj/item/source, atom/target, mob/living/user, params)
+/datum/component/spy_uplink/proc/on_secondary_interact(obj/item/source, mob/living/user, atom/interacting_with, list/modifiers)
 	SIGNAL_HANDLER
 
-	if(!ismovable(target))
+	if(!ismovable(interacting_with))
 		return NONE
 	if(!IS_SPY(user))
 		return NONE
-	if(!try_steal(target, user))
+	if(!try_steal(interacting_with, user))
 		return NONE
-	return COMPONENT_CANCEL_ATTACK_CHAIN
+	return ITEM_INTERACT_BLOCKING
 
 /// Checks if the passed atom is something that can be stolen according to one of the active bounties.
 /// If so, starts the stealing process.

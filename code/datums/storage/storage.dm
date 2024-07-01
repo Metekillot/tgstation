@@ -927,12 +927,16 @@ GLOBAL_LIST_EMPTY(cached_storage_typecaches)
 
 
 /// Signal handler for when we get attacked with secondary click by an item.
-/datum/storage/proc/on_item_interact_secondary(datum/source, mob/user, atom/weapon)
+/datum/storage/proc/on_item_interact_secondary(datum/source, mob/user, atom/weapon, modifiers)
 	SIGNAL_HANDLER
 
 	if(istype(weapon, /obj/item/chameleon))
 		var/obj/item/chameleon/chameleon_weapon = weapon
 		chameleon_weapon.make_copy(source, user)
+
+	. = SEND_SIGNAL(weapon, COMSIG_ITEM_INTERACTING_WITH_ATOM_SECONDARY, user, parent, modifiers)
+	if(. & ITEM_INTERACT_BLOCKING) // kansai signal drifto?????
+		return ITEM_INTERACT_BLOCKING
 
 	if(open_storage_on_signal(source, user))
 		return ITEM_INTERACT_BLOCKING
